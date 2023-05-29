@@ -6,15 +6,11 @@ import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
 
 export function App() {
-  const [contacts, setContacts] = useState(() => {
-    const gotContacts = localStorage.getItem('contacts');
-    if (gotContacts) {
-      return JSON.parse(gotContacts);
-    }
-    return [];
-  });
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(localStorage.getItem('contacts')) ?? []
+  );
+
   const [filter, setFilter] = useState('');
-  const [visibleContacts, setVisibleContact] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -49,15 +45,10 @@ export function App() {
     setFilter(e.target.value);
   };
 
-  useEffect(() => {
-    const normalizedFilter = filter.toLocaleLowerCase();
-
-    setVisibleContact(
-      contacts.filter(contact =>
-        contact.name.toLowerCase().includes(normalizedFilter)
-      )
-    );
-  }, [filter, contacts]);
+  const normalizedFilter = filter.toLocaleLowerCase();
+  const visibleContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(normalizedFilter)
+  );
 
   return (
     <>
